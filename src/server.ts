@@ -3,12 +3,8 @@ import { handler } from "./handler";
 
 const port = 5000;
 
-const server = createServer();
+const server = createServer(handler);
 
-server.on("request", handler);
-
-server.listen(port);
-
-server.on("listening", () =>
+server.listen(port, () =>
   console.log(`(Event) Server listening on port ${port}`)
 );
