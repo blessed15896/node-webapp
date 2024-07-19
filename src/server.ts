@@ -21,7 +21,7 @@ const httpsPort = 5500;
 
 const expressApp: Express = express();
 expressApp.get("/favicon.ico", notFoundHandler);
-expressApp.get("/newurl", newUrlHandler);
+expressApp.get("/newurl/:message?", newUrlHandler);
 expressApp.get("*", defaultHandler);
 
 const httpsServer = createHttpsServer(

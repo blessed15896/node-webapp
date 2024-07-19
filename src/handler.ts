@@ -14,7 +14,8 @@ export const notFoundHandler = (req: Request, res: Response) => {
 };
 
 export const newUrlHandler = (req: Request, res: Response) => {
-  res.send("Hello, New URL");
+  const msg = req.params.message ?? "(No Message)";
+  res.send(`Hello, ${msg}`);
 };
 
 export const defaultHandler = (req: Request, res: Response) => {
