@@ -5,6 +5,8 @@ import { readHandler } from "./readHandler";
 const port = 5000;
 const expressApp: Express = express();
 
+expressApp.use(express.json());
+
 expressApp.post("/read", readHandler);
 
 expressApp.get("/sendcity", (req, res) =>
