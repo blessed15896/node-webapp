@@ -1,7 +1,9 @@
 import { IncomingMessage, ServerResponse } from "http";
+import { TLSSocket } from "tls";
 
 export const handler = (req: IncomingMessage, res: ServerResponse) => {
-  const parsedURL = new URL(req.url ?? "", `http://${req.headers.host}`);
+  const protocol = isHttps(req) ? "https" : "http";
+  const parsedURL = new URL(req.url ?? "", `${protocol}://${req.headers.host}`);
   if (req.method !== "GET" || parsedURL.pathname == "/favicon.ico") {
     res.writeHead(404, "Not Found");
     res.end();
@@ -9,11 +11,15 @@ export const handler = (req: IncomingMessage, res: ServerResponse) => {
   } else {
     res.writeHead(200, "OK");
     if (!parsedURL.searchParams.has("keyword")) {
-      res.write("Hello, HTTP");
+      res.write(`Hello, ${protocol.toUpperCase()}`);
     } else {
       res.write(`Hello, ${parsedURL.searchParams.get("keyword")}`);
     }
     res.end();
     return;
   }
+};
+
+export const isHttps = (req: IncomingMessage): boolean => {
+  return req.socket instanceof TLSSocket && req.socket.encrypted;
 };
