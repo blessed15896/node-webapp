@@ -18,6 +18,7 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "express": "^4.19.2"
   }
 }
