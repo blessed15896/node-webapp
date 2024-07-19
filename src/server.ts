@@ -1,21 +1,23 @@
 import { createServer } from "http";
-import { handler } from "./handler";
+import { createServer as createHttpsServer } from "https";
+import { readFileSync } from "fs";
+import { handler, redirectionHandler } from "./handler";
 
 const port = 5000;
 
-const server = createServer();
+const server = createServer(redirectionHandler);
 
-server.on("request", (req, res) => {
-  if (req.url?.endsWith("favicon.ico")) {
-    res.statusCode = 404;
-    res.end();
-  } else {
-    handler(req, res);
-  }
-});
+server.listen(port, () =>
+  console.log(`(Event) Server listening on port ${port}`)
+);
 
-server.listen(port);
+const httpsPort = 5500;
 
-server.on("listening", () => {
-  console.log(`(Event) Server listening on port ${port}`);
-});
+const httpsServer = createHttpsServer(
+  { key: readFileSync("key.pem"), cert: readFileSync("cert.pem") },
+  handler
+);
+
+httpsServer.listen(httpsPort, () =>
+  console.log(`HTTPS Server listening on port ${httpsPort}`)
+);

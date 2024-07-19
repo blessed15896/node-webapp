@@ -1,24 +1,33 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { endPromise, writePromise } from "./promises";
-import { Count } from "./counter_cb";
+import { TLSSocket } from "tls";
 
-const total = 2_000_000_000;
-const iterations = 5;
-let shared_counter = 0;
+export const isHttps = (req: IncomingMessage): boolean => {
+  return req.socket instanceof TLSSocket && req.socket.encrypted;
+};
 
-export const handler = async (req: IncomingMessage, res: ServerResponse) => {
-  const request = shared_counter++;
-  Count(request, iterations, total, async (err, update) => {
-    if (err !== null) {
-      console.log(err);
-      res.statusCode = 500;
-      await res.end();
-    } else if (update !== true) {
-      const msg = `Request: ${request}, Iteration: ${update}`;
-      console.log(msg);
-      await writePromise.bind(res)(msg + "\n");
+export const redirectionHandler = (
+  req: IncomingMessage,
+  res: ServerResponse
+) => {
+  res.writeHead(302, { location: "https://localhost:5500" });
+  res.end();
+};
+
+export const handler = (req: IncomingMessage, res: ServerResponse) => {
+  const protocol = isHttps(req) ? "https" : "http";
+  const parsedURL = new URL(req.url ?? "", `${protocol}://${req.headers.host}`);
+  if (req.method !== "GET" || parsedURL.pathname == "/favicon.ico") {
+    res.writeHead(404, "Not Found");
+    res.end();
+    return;
+  } else {
+    res.writeHead(200, "OK");
+    if (!parsedURL.searchParams.has("keyword")) {
+      res.write(`Hello, ${protocol.toUpperCase()}`);
     } else {
-      await endPromise.bind(res)("Done");
+      res.write(`Hello, ${parsedURL.searchParams.get("keyword")}`);
     }
-  });
+    res.end();
+    return;
+  }
 };
