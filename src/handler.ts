@@ -1,6 +1,18 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { TLSSocket } from "tls";
 
+export const isHttps = (req: IncomingMessage): boolean => {
+  return req.socket instanceof TLSSocket && req.socket.encrypted;
+};
+
+export const redirectionHandler = (
+  req: IncomingMessage,
+  res: ServerResponse
+) => {
+  res.writeHead(302, { location: "https://localhost:5500" });
+  res.end();
+};
+
 export const handler = (req: IncomingMessage, res: ServerResponse) => {
   const protocol = isHttps(req) ? "https" : "http";
   const parsedURL = new URL(req.url ?? "", `${protocol}://${req.headers.host}`);
@@ -18,8 +30,4 @@ export const handler = (req: IncomingMessage, res: ServerResponse) => {
     res.end();
     return;
   }
-};
-
-export const isHttps = (req: IncomingMessage): boolean => {
-  return req.socket instanceof TLSSocket && req.socket.encrypted;
 };
