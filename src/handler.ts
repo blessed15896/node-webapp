@@ -1,9 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { TLSSocket } from "tls";
-
-export const isHttps = (req: IncomingMessage): boolean => {
-  return req.socket instanceof TLSSocket && req.socket.encrypted;
-};
+import { Request, Response } from "express";
 
 export const redirectionHandler = (
   req: IncomingMessage,
@@ -13,23 +9,18 @@ export const redirectionHandler = (
   res.end();
 };
 
-export const handler = (req: IncomingMessage, res: ServerResponse) => {
-  const protocol = isHttps(req) ? "https" : "http";
-  const parsedURL = new URL(req.url ?? "", `${protocol}://${req.headers.host}`);
-  if (req.method !== "GET" || parsedURL.pathname == "/favicon.ico") {
-    res.writeHead(404, "Not Found");
-    res.end();
-    return;
+export const notFoundHandler = (req: Request, res: Response) => {
+  res.sendStatus(404);
+};
+
+export const newUrlHandler = (req: Request, res: Response) => {
+  res.send("Hello, New URL");
+};
+
+export const defaultHandler = (req: Request, res: Response) => {
+  if (req.query.keyword) {
+    res.send(`Hello, ${req.query.keyword}`);
   } else {
-    res.writeHead(200, "OK");
-    if (parsedURL.pathname == "/newurl") {
-      res.write("Hello, New URL");
-    } else if (!parsedURL.searchParams.has("keyword")) {
-      res.write(`Hello, ${protocol.toUpperCase()}`);
-    } else {
-      res.write(`Hello, ${parsedURL.searchParams.get("keyword")}`);
-    }
-    res.end();
-    return;
+    res.send(`Hello, ${req.protocol.toUpperCase()}`);
   }
 };

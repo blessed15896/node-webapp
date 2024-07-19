@@ -1,7 +1,13 @@
 import { createServer } from "http";
 import { createServer as createHttpsServer } from "https";
 import { readFileSync } from "fs";
-import { handler, redirectionHandler } from "./handler";
+import {
+  defaultHandler,
+  newUrlHandler,
+  notFoundHandler,
+  redirectionHandler,
+} from "./handler";
+import express, { Express } from "express";
 
 const port = 5000;
 
@@ -13,9 +19,14 @@ server.listen(port, () =>
 
 const httpsPort = 5500;
 
+const expressApp: Express = express();
+expressApp.get("/favicon.ico", notFoundHandler);
+expressApp.get("/newurl", newUrlHandler);
+expressApp.get("*", defaultHandler);
+
 const httpsServer = createHttpsServer(
   { key: readFileSync("key.pem"), cert: readFileSync("cert.pem") },
-  handler
+  expressApp
 );
 
 httpsServer.listen(httpsPort, () =>
