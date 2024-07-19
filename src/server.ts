@@ -1,6 +1,7 @@
 import express, { Express } from "express";
 import { basicHandler } from "./handler";
 import { createServer } from "http";
+import { readHandler } from "./readHandler";
 
 const port = 5000;
 
@@ -12,6 +13,7 @@ expressApp.get("/favicon.ico", (req, res) => {
 });
 
 expressApp.get("*", basicHandler);
+expressApp.post("/read", readHandler);
 
 const server = createServer(expressApp);
 
