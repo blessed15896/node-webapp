@@ -22,7 +22,9 @@ export const handler = (req: IncomingMessage, res: ServerResponse) => {
     return;
   } else {
     res.writeHead(200, "OK");
-    if (!parsedURL.searchParams.has("keyword")) {
+    if (parsedURL.pathname == "/newurl") {
+      res.write("Hello, New URL");
+    } else if (!parsedURL.searchParams.has("keyword")) {
       res.write(`Hello, ${protocol.toUpperCase()}`);
     } else {
       res.write(`Hello, ${parsedURL.searchParams.get("keyword")}`);
