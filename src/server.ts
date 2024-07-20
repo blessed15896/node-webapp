@@ -3,7 +3,7 @@ import { createServer } from "http";
 import { readHandler } from "./readHandler";
 import httpProxy from "http-proxy";
 import cors from "cors";
-import helment from "helmet";
+import helmet from "helmet";
 
 const port = 5000;
 const expressApp: Express = express();
@@ -13,7 +13,7 @@ const proxy = httpProxy.createProxyServer({
 });
 
 expressApp.use(
-  helment({
+  helmet({
     contentSecurityPolicy: {
       directives: {
         imgSrc: "'self'",

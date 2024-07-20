@@ -3,17 +3,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 sendReq = async () => {
-  let payload = [];
-  for (let i = 0; i < 5; i++) {
-    payload.push({ id: i, message: `Payload Message: ${i}\n` });
-  }
   const response = await fetch("/read", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: document.getElementById("input").value,
   });
   document.getElementById("msg").textContent = response.statusText;
-  document.getElementById(
-    "body"
-  ).textContent = `Resp: ${await response.text()}`;
+  document.getElementById("body").innerHTML = await response.text();
 };
