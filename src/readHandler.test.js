@@ -1,19 +1,25 @@
 import { test } from "node:test";
 import { readHandler } from "./readHandler";
 import { equal } from "node:assert";
+import fs from "node:fs";
 
-test("readHandler tests", (testCtx) => {
+test("readHandler tests", async (testCtx) => {
   // Arrange
-  const req = { pipe: testCtx.mock.fn() };
-  const res = { cookie: testCtx.mock.fn() };
+  const data = "json-data";
+  testCtx.mock.method(fs, "readFile", (file, cb) => cb(undefined, data));
+  const req = {};
+  const res = {
+    setHeader: testCtx.mock.fn(),
+    write: testCtx.mock.fn(),
+    end: testCtx.mock.fn(),
+  };
 
   // Act
-  readHandler(req, res);
+  await readHandler(req, res);
 
   // Assert
-  equal(req.pipe.mock.callCount(), 1);
-  equal(req.pipe.mock.calls[0].arguments[0], res);
-  equal(res.cookie.mock.callCount(), 1);
-  equal(res.cookie.mock.calls[0].arguments[0], "sessionID");
-  equal(res.cookie.mock.calls[0].arguments[1], "mysecretcode");
+  equal(res.setHeader.mock.calls[0].arguments[0], "Content-Type");
+  equal(res.setHeader.mock.calls[0].arguments[1], "application/json");
+  equal(res.write.mock.calls[0].arguments[0], data);
+  equal(res.end.mock.callCount(), 1);
 });
