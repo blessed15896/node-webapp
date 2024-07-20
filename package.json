@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "tsc-watch --noClear --onSuccess \"node dist/server.js\"",
-    "client": "webpack --watch",
+    "client": "webpack serve",
     "start": "npm-run-all --parallel server client"
   },
   "keywords": [],
@@ -20,7 +20,8 @@
     "tsc-watch": "^6.2.0",
     "typescript": "^5.5.3",
     "webpack": "^5.93.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
