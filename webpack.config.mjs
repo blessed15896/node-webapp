@@ -17,4 +17,5 @@ export default {
       webSocketURL: "http://localhost:5000/ws",
     },
   },
+  devtool: "source-map",
 };

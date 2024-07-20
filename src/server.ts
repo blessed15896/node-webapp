@@ -3,6 +3,7 @@ import { createServer } from "http";
 import { readHandler } from "./readHandler";
 import httpProxy from "http-proxy";
 import cors from "cors";
+import helment from "helmet";
 
 const port = 5000;
 const expressApp: Express = express();
@@ -10,6 +11,20 @@ const proxy = httpProxy.createProxyServer({
   target: "http://localhost:5100",
   ws: true,
 });
+
+expressApp.use(
+  helment({
+    contentSecurityPolicy: {
+      directives: {
+        imgSrc: "'self'",
+        scriptSrcAttr: "'none'",
+        scriptSrc: "'self'",
+        connectSrc: "'self' ws://localhost:5000",
+      },
+    },
+  })
+);
+
 expressApp.use(
   cors({
     origin: "http://localhost:5100", // webpack-dev-server url
