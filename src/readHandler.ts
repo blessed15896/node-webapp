@@ -5,6 +5,7 @@ export const readHandler = async (req: Request, res: Response) => {
   try {
     res.setHeader("Content-Type", "application/json");
     res.write(await readFile("data.json"));
+    debugger;
   } catch (err) {
     res.writeHead(500);
   }
