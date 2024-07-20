@@ -4,13 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="client.js"></script>
+    <script src="bundle.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">
   </head>
   <body class="m-2">
-    <img class="img-fluid" src="city.png" style="width: 100%; display: block; margin-bottom: 2px;" alt="">
     <button class="btn btn-primary my-2" id="btn">Send Request</button>
-    <div id="msg"></div>
-    <div id="body" class="fw-bold"></div>
+    <table class="table table-striped">
+      <tbody>
+        <tr>
+          <th>Status</th>
+          <th id="msg"></th>
+        </tr>
+        <tr>
+          <th>Response</th>
+          <th id="body"></th>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>
