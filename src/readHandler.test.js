@@ -1,12 +1,12 @@
 import { test } from "node:test";
 import { readHandler } from "./readHandler";
 import { equal } from "node:assert";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 
 test("readHandler tests", async (testCtx) => {
   // Arrange
   const data = "json-data";
-  testCtx.mock.method(fs, "readFile", (file, cb) => cb(undefined, data));
+  testCtx.mock.method(fs, "readFile", async () => data);
   const req = {};
   const res = {
     setHeader: testCtx.mock.fn(),
